@@ -4,6 +4,7 @@ const FIRST_QUARTER = 'first';
 const SECOND_QUARTER = 'second';
 const THIRD_QUARTER = 'third';
 const FOURTH_QUARTER = 'fourth';
+const VALID_LENGTH = 6;
 /**
  * The $minute variable contains a number from 0 to 59 (i.e. 10 or 25 or 60 etc).
  * Determine in which quarter of an hour the number falls.
@@ -71,7 +72,7 @@ function isSumEqual(string $input): bool
     $length = strlen($input);
     $halfLength = $length / 2;
 
-    if ($length !== 6 || !is_numeric($input)) {
+    if ($length !== VALID_LENGTH || !is_numeric($input)) {
         throw new InvalidArgumentException();
     }
 
