@@ -1,10 +1,14 @@
 <?php
 const MIN_YEAR = 1900;
+
 const FIRST_QUARTER = 'first';
 const SECOND_QUARTER = 'second';
 const THIRD_QUARTER = 'third';
 const FOURTH_QUARTER = 'fourth';
+const SECONDS_IN_MINUTE = 60;
+
 const VALID_LENGTH = 6;
+
 /**
  * The $minute variable contains a number from 0 to 59 (i.e. 10 or 25 or 60 etc).
  * Determine in which quarter of an hour the number falls.
@@ -18,22 +22,19 @@ const VALID_LENGTH = 6;
  */
 function getMinuteQuarter(int $minute): string
 {
-    if ($minute < 0 || $minute >= 60) {
+    if ($minute < 0 || $minute >= SECONDS_IN_MINUTE) {
         throw new InvalidArgumentException();
     }
 
-    $quarter = '';
     if ($minute > 0 && $minute <= 15) {
-        $quarter = FIRST_QUARTER;
+        return FIRST_QUARTER;
     } elseif ($minute > 15 && $minute <= 30) {
-        $quarter = SECOND_QUARTER;
+        return SECOND_QUARTER;
     } elseif ($minute > 30 && $minute <= 45) {
-        $quarter = THIRD_QUARTER;
+        return THIRD_QUARTER;
     } elseif ($minute > 45 || $minute === 0) {
-        $quarter = FOURTH_QUARTER;
+        return FOURTH_QUARTER;
     }
-
-    return $quarter;
 }
 
 /**
@@ -51,6 +52,9 @@ function isLeapYear(int $year): bool
 {
     if ($year < MIN_YEAR) {
         throw new InvalidArgumentException();
+    }
+    if ($year % 100 === 0 && $year % 400 !== 0) {
+        return false;
     }
 
     return ($year % 4) === 0;
@@ -70,23 +74,18 @@ function isLeapYear(int $year): bool
 function isSumEqual(string $input): bool
 {
     $length = strlen($input);
-    $halfLength = $length / 2;
-
     if ($length !== VALID_LENGTH || !is_numeric($input)) {
         throw new InvalidArgumentException();
     }
+    $halfLength = $length / 2;
 
-    $firstHalf = getSumOfDigits(substr($input, 0, $halfLength));
-    $secondHalf = getSumOfDigits(substr($input, -$halfLength));
-
-    return $firstHalf === $secondHalf;
+    return getSumOfDigits(substr($input, 0, $halfLength)) === getSumOfDigits(substr($input, -$halfLength));
 }
 
 function getSumOfDigits(string $input): int
 {
-    $digits = str_split($input);
     $sum = 0;
-    foreach ($digits as $digit) {
+    foreach (str_split($input) as $digit) {
         $sum += (int) $digit;
     }
 
