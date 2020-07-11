@@ -9,6 +9,17 @@
  */
 function snakeCaseToCamelCase(string $input)
 {
+    if (empty($input)) {
+        throw new InvalidArgumentException("The input can't be an empty");
+    }
+
+    $words = explode('_', $input);
+    $response = strtolower($words[0]);
+    for ($i = 1; $i < count($words); $i++) {
+        $response .= ucfirst($words[$i]);
+    }
+
+    return $response;
 }
 
 /**
@@ -21,6 +32,30 @@ function snakeCaseToCamelCase(string $input)
  */
 function mirrorMultibyteString(string $input)
 {
+    if (empty($input)) {
+        throw new InvalidArgumentException("The input can't be an empty");
+    }
+
+    $result = [];
+    foreach(explode(' ', $input) as $word) {
+        $result[] = mbStringReverse($word);
+    }
+
+    return implode(' ', $result);
+}
+
+/**
+ * @param string $word
+ * @return string
+ */
+function mbStringReverse(string $word): string
+{
+    $reversed = '';
+    for ($i = mb_strlen($word); $i >= 0; $i--) {
+        $reversed .= mb_substr($word, $i, 1);
+    }
+
+    return $reversed;
 }
 
 /**
@@ -39,4 +74,14 @@ function mirrorMultibyteString(string $input)
  */
 function getBrandName(string $noun)
 {
+    if (empty($noun)) {
+        throw new InvalidArgumentException("The noun can't be an empty");
+    }
+
+    if (substr($noun,0,1) === substr($noun, -1)) {
+
+        return ucfirst($noun . substr($noun, 1));
+    }
+
+    return "The " . ucfirst($noun);
 }
