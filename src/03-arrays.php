@@ -1,4 +1,6 @@
 <?php
+const KEY_TAGS = 'tags';
+const KEY_NAME = 'name';
 /**
  * The $input variable contains an array of digits
  * Return an array which will contain the same digits but repetitive by its value
@@ -10,6 +12,14 @@
  */
 function repeatArrayValues(array $input)
 {
+    $result = [];
+    foreach ($input as $value) {
+        for ($i = 0; $i < $value; $i++) {
+            $result[] = $value;
+        }
+    }
+
+    return $result;
 }
 
 /**
@@ -22,6 +32,14 @@ function repeatArrayValues(array $input)
  */
 function getUniqueValue(array $input)
 {
+    $uniq = [];
+    foreach (array_count_values($input) as $key => $value) {
+        if ($value == 1) {
+            $uniq[] = $key;
+        }
+    }
+
+    return $uniq ? min($uniq) : 0;
 }
 
 /**
@@ -50,4 +68,19 @@ function getUniqueValue(array $input)
  */
 function groupByTag(array $input)
 {
+    $result = [];
+    foreach ($input as $item) {
+        foreach ($item[KEY_TAGS] as $tag) {
+            if (array_key_exists($tag, $result)) {
+                $result[$tag][] = $item[KEY_NAME];
+            } else {
+                $result[$tag] = [$item[KEY_NAME]];
+            }
+        }
+    }
+    foreach ($result as $key => &$value) {
+        sort($value);
+    }
+
+    return $result;
 }
